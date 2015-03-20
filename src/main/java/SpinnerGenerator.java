@@ -9,13 +9,17 @@ public class SpinnerGenerator {
     private int h;
     private int dots;
     private int dotRadius;
+    private Color foreground;
+    private Color background;
 
-    public SpinnerGenerator(int dots, int dotRadius, int radius, int w, int h) {
+    public SpinnerGenerator(int dots, int dotRadius, int radius, int w, int h, Color background, Color foreground) {
         this.dots = dots;
         this.dotRadius = dotRadius;
         this.radius = radius;
         this.w = w;
         this.h = h;
+        this.background = background;
+        this.foreground = foreground;
     }
 
     public int getDots() {
@@ -58,6 +62,22 @@ public class SpinnerGenerator {
         this.dotRadius = dotRadius;
     }
 
+    public Color getBackground() {
+        return background;
+    }
+
+    public void setBackground(Color background) {
+        this.background = background;
+    }
+
+    public Color getForeground() {
+        return foreground;
+    }
+
+    public void setForeground(Color foreground) {
+        this.foreground = foreground;
+    }
+
     private double computeDotRadius(double p) {
         double s = (p >= 8) ?  1: 1 +  Math.exp(-Math.pow((p-4)/2,2));
         return dotRadius * s;
@@ -67,14 +87,14 @@ public class SpinnerGenerator {
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D)img.getGraphics();
 
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(background);
         g2d.fillRect(0, 0, w, h);
 
         int cx = w/2;
         int cy = h/2;
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(foreground);
         double angle = 2*Math.PI/dots;
         for (int i = 0; i < dots; i++) {
             int x = (int)(radius * Math.sin(i*angle));

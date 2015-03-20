@@ -5,22 +5,24 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.Timer;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class SpinnerGeneratorDialog extends JDialog {
@@ -34,11 +36,10 @@ public class SpinnerGeneratorDialog extends JDialog {
     private JTextField dotRadiusCtrl;
     private JTextField phaseDelayCtrl;
     private SpinnerView spinnerView;
+    private JButton buttonForeground;
+    private JButton buttonBackground;
 
-    private SpinnerGenerator spinnerGenerator = new SpinnerGenerator(12, 2, 20, 52, 52);
-
-    private Timer timer;
-    private int phase;
+    private SpinnerGenerator spinnerGenerator = new SpinnerGenerator(12, 2, 20, 52, 52, Color.WHITE, Color.BLACK);
 
     public SpinnerGeneratorDialog() {
         $$$setupUI$$$();
@@ -56,8 +57,9 @@ public class SpinnerGeneratorDialog extends JDialog {
 
         buttonSave.addActionListener(e -> onSave());
         buttonQuit.addActionListener(e -> onQuit());
+        buttonBackground.addActionListener(e -> chooseBackgroundColor());
+        buttonForeground.addActionListener(e -> chooseForegroundColor());
 
-// call onQuit() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -138,6 +140,49 @@ public class SpinnerGeneratorDialog extends JDialog {
         });
     }
 
+    private void chooseBackgroundColor() {
+        Color c = chooseColor(spinnerGenerator.getBackground());
+        spinnerGenerator.setBackground(c);
+        buttonBackground.setBackground(c);
+        spinnerView.repaint();
+    }
+
+    private void chooseForegroundColor() {
+        Color c = chooseColor(spinnerGenerator.getForeground());
+        spinnerGenerator.setForeground(c);
+        buttonForeground.setBackground(c);
+        spinnerView.repaint();
+    }
+
+    private Color chooseColor(Color initial) {
+        final Holder<Color> color = new Holder<Color>(initial);
+        final JColorChooser colorChooser = new JColorChooser(initial);
+
+//        // Remove all panels but "RGB"
+//        AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
+//        for (AbstractColorChooserPanel p : panels) {
+//            String displayName = p.getDisplayName();
+//            if (!displayName.equals("RGB")) {
+//                colorChooser.removeChooserPanel(p);
+//            }
+//        }
+//
+//        // remove the preview panel
+//        colorChooser.setPreviewPanel(new JPanel());
+//
+        // Finally, show the dialog.
+        JDialog dialog = JColorChooser.createDialog(this, "Select Color", true, colorChooser, e -> color.set(colorChooser.getColor()), null);
+        dialog.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                Window w = (Window) e.getComponent();
+                w.dispose();
+            }
+        });
+        dialog.setVisible(true);
+        return color.get();
+    }
+
     private void onSave() {
         try {
             ImageOutputStream os = new FileImageOutputStream(new File("/tmp/spinner.gif"));
@@ -152,7 +197,6 @@ public class SpinnerGeneratorDialog extends JDialog {
     }
 
     private void onQuit() {
-// add your code here if necessary
         dispose();
     }
 
@@ -165,6 +209,18 @@ public class SpinnerGeneratorDialog extends JDialog {
 
     private void createUIComponents() {
         spinnerView = new SpinnerView(spinnerGenerator);
+
+        buttonForeground = new JButton();
+        buttonForeground.setBorderPainted(true);
+        buttonForeground.setFocusPainted(false);
+        buttonForeground.setContentAreaFilled(true);
+        buttonForeground.setBackground(spinnerGenerator.getForeground());
+
+        buttonBackground = new JButton();
+        buttonBackground.setBorderPainted(true);
+        buttonBackground.setFocusPainted(false);
+        buttonBackground.setContentAreaFilled(true);
+        buttonBackground.setBackground(spinnerGenerator.getBackground());
     }
 
     /**
@@ -193,7 +249,7 @@ public class SpinnerGeneratorDialog extends JDialog {
         buttonQuit.setText("Quit");
         panel2.add(buttonQuit, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(3, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(3, 6, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("Width:");
@@ -228,6 +284,16 @@ public class SpinnerGeneratorDialog extends JDialog {
         phaseDelayCtrl = new JTextField();
         phaseDelayCtrl.setText("");
         panel3.add(phaseDelayCtrl, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label7 = new JLabel();
+        label7.setText("Background:");
+        panel3.add(label7, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label8 = new JLabel();
+        label8.setText("Foreground:");
+        panel3.add(label8, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonForeground.setText(" ");
+        panel3.add(buttonForeground, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonBackground.setText(" ");
+        panel3.add(buttonBackground, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         contentPane.add(spacer2, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         contentPane.add(spinnerView, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -239,4 +305,5 @@ public class SpinnerGeneratorDialog extends JDialog {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

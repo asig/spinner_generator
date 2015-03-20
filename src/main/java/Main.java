@@ -16,7 +16,7 @@ public class Main extends JPanel {
 
     private final int dots = 12;
     private final int SIZE = 52;
-    private final SpinnerGenerator spinnerGenerator = new SpinnerGenerator(dots, 2, 20, SIZE, SIZE);
+    private final SpinnerGenerator spinnerGenerator = new SpinnerGenerator(dots, 2, 20, SIZE, SIZE, Color.WHITE, Color.BLACK);
     private int ofs = 0;
 
     public Main() {
