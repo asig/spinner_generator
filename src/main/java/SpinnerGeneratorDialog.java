@@ -2,6 +2,8 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -15,6 +17,11 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class SpinnerGeneratorDialog extends JDialog {
     private JPanel contentPane;
@@ -27,6 +34,8 @@ public class SpinnerGeneratorDialog extends JDialog {
     private JTextField dotRadiusCtrl;
     private JTextField phaseDelayCtrl;
     private SpinnerView spinnerView;
+
+    private SpinnerGenerator spinnerGenerator = new SpinnerGenerator(12, 2, 20, 52, 52);
 
     private Timer timer;
     private int phase;
@@ -130,8 +139,16 @@ public class SpinnerGeneratorDialog extends JDialog {
     }
 
     private void onSave() {
-// add your code here
-        dispose();
+        try {
+            ImageOutputStream os = new FileImageOutputStream(new File("/tmp/spinner.gif"));
+            GifSequenceWriter writer = new GifSequenceWriter(os, BufferedImage.TYPE_INT_ARGB, spinnerView.getPhaseDelay(), true);
+            for (int i = spinnerGenerator.getDots() - 1; i >= 0; i--) {
+                writer.writeToSequence(spinnerGenerator.generate(i));
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void onQuit() {
@@ -147,7 +164,7 @@ public class SpinnerGeneratorDialog extends JDialog {
     }
 
     private void createUIComponents() {
-        spinnerView = new SpinnerView(new SpinnerGenerator(12, 2, 20, 52, 52));
+        spinnerView = new SpinnerView(spinnerGenerator);
     }
 
     /**
