@@ -8,9 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -51,6 +54,7 @@ public class SpinnerGeneratorDialog extends JDialog {
         dotRadiusCtrl.setText(Integer.toString(spinnerView.getDotRadius()));
         phaseDelayCtrl.setText(Integer.toString(spinnerView.getPhaseDelay()));
 
+        setTitle("Spinner Generator");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonSave);
@@ -184,15 +188,23 @@ public class SpinnerGeneratorDialog extends JDialog {
     }
 
     private void onSave() {
-        try {
-            ImageOutputStream os = new FileImageOutputStream(new File("/tmp/spinner.gif"));
-            GifSequenceWriter writer = new GifSequenceWriter(os, BufferedImage.TYPE_INT_ARGB, spinnerView.getPhaseDelay(), true);
-            for (int i = spinnerGenerator.getDots() - 1; i >= 0; i--) {
-                writer.writeToSequence(spinnerGenerator.generate(i));
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("GIF Files", "gif"));
+        int res = fc.showSaveDialog(this);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            try {
+                ImageOutputStream os = new FileImageOutputStream(file);
+                GifSequenceWriter writer = new GifSequenceWriter(os, BufferedImage.TYPE_INT_ARGB, spinnerView.getPhaseDelay(), true);
+                for (int i = spinnerGenerator.getDots() - 1; i >= 0; i--) {
+                    writer.writeToSequence(spinnerGenerator.generate(i));
+                }
+                writer.close();
+                os.close();
+                JOptionPane.showMessageDialog(this, "File saved.");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
