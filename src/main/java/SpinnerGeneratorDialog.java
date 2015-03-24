@@ -12,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Color;
@@ -32,12 +33,12 @@ public class SpinnerGeneratorDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonSave;
     private JButton buttonQuit;
-    private JTextField spinnerWidthCtrl;
-    private JTextField spinnerHeightCtrl;
-    private JTextField spinnerRadiusCtrl;
-    private JTextField spinnerDotsCtrl;
-    private JTextField dotRadiusCtrl;
-    private JTextField phaseDelayCtrl;
+    private JSpinner spinnerWidthCtrl;
+    private JSpinner spinnerHeightCtrl;
+    private JSpinner spinnerRadiusCtrl;
+    private JSpinner spinnerDotsCtrl;
+    private JSpinner dotRadiusCtrl;
+    private JSpinner phaseDelayCtrl;
     private SpinnerView spinnerView;
     private JButton buttonForeground;
     private JButton buttonBackground;
@@ -47,12 +48,12 @@ public class SpinnerGeneratorDialog extends JDialog {
     public SpinnerGeneratorDialog() {
         $$$setupUI$$$();
 
-        spinnerWidthCtrl.setText(Integer.toString(spinnerView.getW()));
-        spinnerHeightCtrl.setText(Integer.toString(spinnerView.getH()));
-        spinnerRadiusCtrl.setText(Integer.toString(spinnerView.getRadius()));
-        spinnerDotsCtrl.setText(Integer.toString(spinnerView.getDots()));
-        dotRadiusCtrl.setText(Integer.toString(spinnerView.getDotRadius()));
-        phaseDelayCtrl.setText(Integer.toString(spinnerView.getPhaseDelay()));
+        spinnerWidthCtrl.setValue(spinnerView.getW());
+        spinnerHeightCtrl.setValue(spinnerView.getH());
+        spinnerRadiusCtrl.setValue(spinnerView.getRadius());
+        spinnerDotsCtrl.setValue(spinnerView.getDots());
+        dotRadiusCtrl.setValue(spinnerView.getDotRadius());
+        phaseDelayCtrl.setValue(spinnerView.getPhaseDelay());
 
         setTitle("Spinner Generator");
         setContentPane(contentPane);
@@ -71,77 +72,13 @@ public class SpinnerGeneratorDialog extends JDialog {
             }
         });
 
-        spinnerWidthCtrl.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                try {
-                    spinnerView.setW(Integer.parseInt(spinnerWidthCtrl.getText()));
-                    pack();
-                    repaint();
-                } catch (NumberFormatException ex) {
-                }
-                spinnerWidthCtrl.setText(Integer.toString(spinnerView.getW()));
-            }
-        });
-
-        spinnerHeightCtrl.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                try {
-                    spinnerView.setH(Integer.parseInt(spinnerHeightCtrl.getText()));
-                    pack();
-                    repaint();
-                } catch (NumberFormatException ex) {
-                }
-                spinnerHeightCtrl.setText(Integer.toString(spinnerView.getH()));
-            }
-        });
-        spinnerRadiusCtrl.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                try {
-                    spinnerView.setRadius(Integer.parseInt(spinnerRadiusCtrl.getText()));
-                } catch (NumberFormatException ex) {
-                }
-                spinnerRadiusCtrl.setText(Integer.toString(spinnerView.getRadius()));
-            }
-        });
-        spinnerDotsCtrl.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                try {
-                    spinnerView.setDots(Integer.parseInt(spinnerDotsCtrl.getText()));
-                } catch (NumberFormatException ex) {
-                }
-                spinnerDotsCtrl.setText(Integer.toString(spinnerView.getDots()));
-            }
-        });
-        dotRadiusCtrl.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                try {
-                    spinnerView.setDotRadius(Integer.parseInt(dotRadiusCtrl.getText()));
-                } catch (NumberFormatException ex) {
-                }
-                dotRadiusCtrl.setText(Integer.toString(spinnerView.getDotRadius()));
-            }
-        });
-        phaseDelayCtrl.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                try {
-                    spinnerView.setPhaseDelay(Integer.parseInt(phaseDelayCtrl.getText()));
-                } catch (NumberFormatException ex) {
-                }
-                phaseDelayCtrl.setText(Integer.toString(spinnerView.getPhaseDelay()));
-            }
-        });
+        spinnerWidthCtrl.addChangeListener(e -> { spinnerView.setW((Integer) spinnerWidthCtrl.getValue()); pack(); });
+        spinnerHeightCtrl.addChangeListener(e -> { spinnerView.setH((Integer) spinnerHeightCtrl.getValue()); pack(); });
+        spinnerRadiusCtrl.addChangeListener(e -> { spinnerView.setRadius((Integer) spinnerRadiusCtrl.getValue()); });
+        spinnerDotsCtrl.addChangeListener(e -> { spinnerView.setDots((Integer) spinnerDotsCtrl.getValue()); });
+        dotRadiusCtrl.addChangeListener(e -> { spinnerView.setDotRadius((Integer) dotRadiusCtrl.getValue()); });
+        phaseDelayCtrl.addChangeListener(e -> {
+            spinnerView.setPhaseDelay((Integer) phaseDelayCtrl.getValue()); });
     }
 
     private void chooseBackgroundColor() {
@@ -266,35 +203,32 @@ public class SpinnerGeneratorDialog extends JDialog {
         final JLabel label1 = new JLabel();
         label1.setText("Width:");
         panel3.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        spinnerWidthCtrl = new JTextField();
-        spinnerWidthCtrl.setText("");
+        spinnerWidthCtrl = new JSpinner();
         panel3.add(spinnerWidthCtrl, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setText("Height:");
         panel3.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        spinnerHeightCtrl = new JTextField();
+        spinnerHeightCtrl = new JSpinner();
         panel3.add(spinnerHeightCtrl, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Radius:");
         panel3.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        spinnerRadiusCtrl = new JTextField();
+        spinnerRadiusCtrl = new JSpinner();
         panel3.add(spinnerRadiusCtrl, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label4 = new JLabel();
         label4.setText("Dots:");
         panel3.add(label4, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        spinnerDotsCtrl = new JTextField();
-        spinnerDotsCtrl.setText("");
+        spinnerDotsCtrl = new JSpinner();
         panel3.add(spinnerDotsCtrl, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label5 = new JLabel();
         label5.setText("Dot radius:");
         panel3.add(label5, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        dotRadiusCtrl = new JTextField();
+        dotRadiusCtrl = new JSpinner();
         panel3.add(dotRadiusCtrl, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label6 = new JLabel();
         label6.setText("Delay (ms):");
         panel3.add(label6, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        phaseDelayCtrl = new JTextField();
-        phaseDelayCtrl.setText("");
+        phaseDelayCtrl = new JSpinner();
         panel3.add(phaseDelayCtrl, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label7 = new JLabel();
         label7.setText("Background:");
@@ -317,5 +251,4 @@ public class SpinnerGeneratorDialog extends JDialog {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
-
 }

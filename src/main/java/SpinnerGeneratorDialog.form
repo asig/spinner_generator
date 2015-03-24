@@ -65,15 +65,13 @@
               <text value="Width:"/>
             </properties>
           </component>
-          <component id="a242d" class="javax.swing.JTextField" binding="spinnerWidthCtrl">
+          <component id="b1918" class="javax.swing.JSpinner" binding="spinnerWidthCtrl">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
+            <properties/>
           </component>
           <component id="1f393" class="javax.swing.JLabel">
             <constraints>
@@ -83,7 +81,7 @@
               <text value="Height:"/>
             </properties>
           </component>
-          <component id="c7bb2" class="javax.swing.JTextField" binding="spinnerHeightCtrl">
+          <component id="e88b0" class="javax.swing.JSpinner" binding="spinnerHeightCtrl">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -99,7 +97,7 @@
               <text value="Radius:"/>
             </properties>
           </component>
-          <component id="5082b" class="javax.swing.JTextField" binding="spinnerRadiusCtrl">
+          <component id="adfe4" class="javax.swing.JSpinner" binding="spinnerRadiusCtrl">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -115,15 +113,13 @@
               <text value="Dots:"/>
             </properties>
           </component>
-          <component id="6c114" class="javax.swing.JTextField" binding="spinnerDotsCtrl">
+          <component id="d8660" class="javax.swing.JSpinner" binding="spinnerDotsCtrl">
             <constraints>
               <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
+            <properties/>
           </component>
           <component id="b575" class="javax.swing.JLabel">
             <constraints>
@@ -133,7 +129,7 @@
               <text value="Dot radius:"/>
             </properties>
           </component>
-          <component id="3c7cf" class="javax.swing.JTextField" binding="dotRadiusCtrl">
+          <component id="3255a" class="javax.swing.JSpinner" binding="dotRadiusCtrl">
             <constraints>
               <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -149,15 +145,13 @@
               <text value="Delay (ms):"/>
             </properties>
           </component>
-          <component id="bd0c5" class="javax.swing.JTextField" binding="phaseDelayCtrl">
+          <component id="71e99" class="javax.swing.JSpinner" binding="phaseDelayCtrl">
             <constraints>
               <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
+            <properties/>
           </component>
           <component id="b3f" class="javax.swing.JLabel">
             <constraints>
